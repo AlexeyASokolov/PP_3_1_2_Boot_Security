@@ -12,7 +12,7 @@ public class HelloController {
     @GetMapping("/")
     public String sayHello(ModelMap modelMap) {
         List<String> messages = new ArrayList<>();
-        messages.add("Welcome on my page!");
+        messages.add("Welcome on page!");
         messages.add("Click the button to authenticate and authorize!");
         modelMap.addAttribute("messages", messages);
         return "hello";
