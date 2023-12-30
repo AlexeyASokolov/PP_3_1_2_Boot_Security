@@ -1,8 +1,6 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -21,9 +20,8 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
-
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserServiceImpl userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -49,14 +47,8 @@ public class AdminController {
     }
 
     @PostMapping("/")
-    public String addUser(@ModelAttribute("user") @Valid User user, ModelMap model) {
-        model.addAttribute("roles", roleService.getRoles());
+    public String addUser(@ModelAttribute("user") @Valid User user) {
         userService.addUser(user);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        userService.updateUser(user);
-
         return "redirect:/admin/";
     }
 
